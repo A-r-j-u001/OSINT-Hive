@@ -1,128 +1,92 @@
+
 "use client"
 
-import { useEffect, useRef } from "react"
-import * as d3 from "d3"
+import { Button } from "@/components/ui/button";
+import { ArrowRight, MoveDown } from "lucide-react";
 
-export function ConnectionGraph() {
-  const svgRef = useRef<SVGSVGElement>(null)
+interface ConnectionGraphProps {
+  targetName?: string;
+  targetRole?: string;
+}
 
-  useEffect(() => {
-    if (!svgRef.current) return
-
-    const width = 600
-    const height = 300
-
-    // Clear previous
-    d3.select(svgRef.current).selectAll("*").remove()
-
-    const svg = d3.select(svgRef.current)
-      .attr("width", width)
-      .attr("height", height)
-      .attr("viewBox", `0 0 ${width} ${height}`)
-
-    // Data: Student -> Aman -> Rohan
-    const nodes = [
-      { id: "YOU", group: 1, label: "You (Student)" },
-      { id: "AMAN", group: 2, label: "Aman (Alumni)" },
-      { id: "ROHAN", group: 3, label: "Rohan (Target)" }
-    ]
-
-    const links = [
-      { source: "YOU", target: "AMAN" },
-      { source: "AMAN", target: "ROHAN" }
-    ]
-
-    // Simulation
-    const simulation = d3.forceSimulation(nodes as any)
-      .force("link", d3.forceLink(links).id((d: any) => d.id).distance(150))
-      .force("charge", d3.forceManyBody().strength(-400))
-      .force("center", d3.forceCenter(width / 2, height / 2))
-
-    // Arrowhead
-    svg.append("defs").selectAll("marker")
-      .data(["end"])
-      .enter().append("marker")
-      .attr("id", "arrow")
-      .attr("viewBox", "0 -5 10 10")
-      .attr("refX", 25)
-      .attr("refY", 0)
-      .attr("markerWidth", 6)
-      .attr("markerHeight", 6)
-      .attr("orient", "auto")
-      .append("path")
-      .attr("d", "M0,-5L10,0L0,5")
-      .attr("fill", "#94a3b8") // Slate-400
-
-    // Links
-    const link = svg.append("g")
-      .selectAll("line")
-      .data(links)
-      .enter().append("line")
-      .attr("stroke", "#475569")
-      .attr("stroke-width", 2)
-      .attr("marker-end", "url(#arrow)")
-
-    // Nodes
-    const node = svg.append("g")
-      .selectAll("g")
-      .data(nodes)
-      .enter().append("g")
-      .call(d3.drag()
-        .on("start", dragstarted)
-        .on("drag", dragged)
-        .on("end", dragended) as any)
-
-    // Node Circles
-    node.append("circle")
-      .attr("r", 20)
-      .attr("fill", (d) => {
-        if (d.group === 1) return "#3b82f6" // Blue
-        if (d.group === 2) return "#eab308" // Yellow
-        return "#06b6d4" // Cyan
-      })
-      .attr("stroke", "#1e293b")
-      .attr("stroke-width", 2)
-
-    // Labels
-    node.append("text")
-      .text(d => d.label)
-      .attr("x", 25)
-      .attr("y", 5)
-      .attr("fill", "#cbd5e1")
-      .style("font-size", "12px")
-      .style("font-family", "sans-serif")
-
-    simulation.on("tick", () => {
-      link
-        .attr("x1", (d: any) => d.source.x)
-        .attr("y1", (d: any) => d.source.y)
-        .attr("x2", (d: any) => d.target.x)
-        .attr("y2", (d: any) => d.target.y)
-
-      node
-        .attr("transform", (d: any) => `translate(${d.x},${d.y})`)
-    })
-
-    function dragstarted(event: any, d: any) {
-      if (!event.active) simulation.alphaTarget(0.3).restart()
-      d.fx = d.x
-      d.fy = d.y
-    }
-
-    function dragged(event: any, d: any) {
-      d.fx = event.x
-      d.fy = event.y
-    }
-
-    function dragended(event: any, d: any) {
-      if (!event.active) simulation.alphaTarget(0)
-      d.fx = null
-      d.fy = null
-    }
-
-  }, [])
+export function ConnectionGraph({ targetName = "Target Mentor", targetRole = "Mentor" }: ConnectionGraphProps) {
+  const firstName = targetName.split(' ')[0].toUpperCase();
 
   return (
-    <svg ref={svgRef} className="w-full h-full border border-slate-800 bg-slate-900/50 rounded-lg" />
-  )
+    <div className="font-mono text-slate-300">
+      <div className="bg-slate-900 border border-slate-800 rounded-lg p-6 mb-6">
+        <div className="flex items-center gap-2 border-b border-dashed border-slate-700 pb-4 mb-6">
+          <span className="text-cyan-400 font-bold">[Connection Path]</span>
+          <span>Goal: Connect with {targetName} ({targetRole})</span>
+        </div>
+
+        <div className="text-xs text-slate-500 mb-8 text-center">[ GRAPH VISUALIZATION (D3.js) ]</div>
+
+        {/* Graph Visualization */}
+        <div className="flex flex-col items-center justify-center gap-4 mb-8">
+          <div className="flex items-center justify-between w-full px-4 md:px-12">
+            {/* NODE: YOU */}
+            <div className="flex flex-col items-center gap-2 text-center group cursor-pointer">
+              <div className="w-16 h-16 rounded-full border-2 border-green-500 bg-green-500/10 flex items-center justify-center font-bold text-green-400 text-xs">
+                YOU
+              </div>
+              <div className="text-xs text-slate-500">[Student]</div>
+            </div>
+
+            {/* ARROW */}
+            <div className="flex-1 border-t border-dashed border-slate-600 relative mx-4">
+              <ArrowRight className="absolute -right-2 -top-2.5 h-5 w-5 text-slate-600" />
+            </div>
+
+            {/* NODE: AMAN */}
+            <div className="flex flex-col items-center gap-2 text-center group cursor-pointer">
+              <div className="w-16 h-16 rounded-full border-2 border-cyan-500 bg-cyan-500/10 flex items-center justify-center font-bold text-cyan-400 text-xs">
+                AMAN
+              </div>
+              <div className="text-xs text-slate-500">[Alumni '23]</div>
+            </div>
+
+            {/* ARROW */}
+            <div className="flex-1 border-t border-dashed border-slate-600 relative mx-4">
+              <ArrowRight className="absolute -right-2 -top-2.5 h-5 w-5 text-slate-600" />
+            </div>
+
+            {/* NODE: ROHAN (Target) */}
+            <div className="flex flex-col items-center gap-2 text-center group cursor-pointer">
+              <div className="w-16 h-16 rounded-full border-2 border-purple-500 bg-purple-500/10 flex items-center justify-center font-bold text-purple-400 text-xs">
+                {firstName}
+              </div>
+              <div className="text-xs text-slate-500">[Target]</div>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center gap-1 -mt-2">
+            <MoveDown className="h-4 w-4 text-slate-600" />
+            <span className="text-xs text-slate-600">(Common Node)</span>
+          </div>
+        </div>
+
+        {/* Pathfinding Result */}
+        <div className="border border-slate-700 bg-slate-950 p-4 rounded-lg space-y-2 text-sm">
+          <div className="text-slate-500 text-xs font-bold mb-2">[ PATHFINDING RESULT (BFS Algo) ]</div>
+          <div>&gt; Degrees of Separation: <span className="text-white font-bold">2</span></div>
+          <div>&gt; Direct connection unavailable.</div>
+          <div className="text-green-400">&gt; OPTIMAL PATH: Ask Aman (your senior) to introduce you to {targetName.split(' ')[0]}.</div>
+        </div>
+      </div>
+
+      <div className="flex gap-4">
+        <Button className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 font-mono">
+          [ Copy Intro Message for Aman ]
+        </Button>
+        <Button variant="outline" className="flex-1 border-slate-700 text-slate-400 hover:bg-slate-800 font-mono">
+          [ Find Alternative Path ]
+        </Button>
+      </div>
+    </div>
+  );
 }
+
+// Re-export as StartConnection specifically if other components expect it, or update usages.
+// The user asked for StartConnection to be reused or wrapped. I'll export it for now as an alias if needed.
+export const StartConnection = ConnectionGraph; 

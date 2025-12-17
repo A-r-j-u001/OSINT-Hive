@@ -1,19 +1,34 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import { BackgroundParticles } from "@/components/ui/background-particles"
 
 export default function LandingPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-black text-white selection:bg-cyan-500/20">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-black text-white selection:bg-cyan-500/20 relative overflow-hidden">
 
       {/* Background Gradient */}
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-black to-black -z-10" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-black to-black -z-20" />
+      <BackgroundParticles />
 
       <main className="container flex flex-col items-center gap-6 px-4 py-16 text-center md:py-32">
+
+        {/* Logo */}
+        <div className="mb-4">
+          <Image
+            src="/OSINT_HIVE.svg"
+            alt="OSINT-Hive Logo"
+            width={280}
+            height={224}
+            className="drop-shadow-[0_0_25px_rgba(6,182,212,0.4)] hover:drop-shadow-[0_0_35px_rgba(6,182,212,0.6)] transition-all"
+            priority
+          />
+        </div>
 
         {/* Badge */}
         <div className="inline-flex items-center rounded-full border border-slate-800 bg-slate-900/50 px-3 py-1 text-sm text-slate-400 backdrop-blur-xl">
           <span className="flex h-2 w-2 rounded-full bg-cyan-500 mr-2 animate-pulse"></span>
-          OSINT-Hive v1.0
+          Version 1.0 - Beta
         </div>
 
         {/* Hero Title */}
@@ -31,13 +46,8 @@ export default function LandingPage() {
         {/* CTA Buttons */}
         <div className="flex gap-4">
           <Link href="/dashboard">
-            <Button size="lg" className="bg-cyan-600 hover:bg-cyan-700 text-white font-semibold">
-              Launch Command Center
-            </Button>
-          </Link>
-          <Link href="/search">
-            <Button size="lg" variant="outline" className="border-slate-800 text-slate-300 hover:bg-slate-900">
-              Run OSINT Search
+            <Button size="lg" className="bg-cyan-600 hover:bg-cyan-700 text-white font-semibold shadow-[0_0_20px_rgba(6,182,212,0.5)]">
+              Get Started
             </Button>
           </Link>
         </div>
