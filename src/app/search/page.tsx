@@ -11,7 +11,9 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Database, Github, User, Upload } from "lucide-react";
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function SearchPage() {
+import { Suspense } from 'react';
+
+function SearchContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -270,20 +272,6 @@ export default function SearchPage() {
           {/* GITHUB SPECIFIC FILTERS */}
           {mode === 'github' && (
             <div className="space-y-8 animate-in fade-in slide-in-from-left-4 duration-500">
-              {/* 0. Search Name/User - REMOVED AS PER REQUEST */}
-              {/* <div className="space-y-2">
-                <label className="text-xs text-emerald-400 font-bold tracking-wider">SEARCH USER</label>
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500" />
-                  <input
-                    className="w-full bg-slate-900 border border-slate-700 rounded py-2 pl-8 pr-2 text-sm text-white focus:outline-none focus:border-emerald-500 placeholder:text-slate-600"
-                    placeholder="Name or Username..."
-                    value={keywords}
-                    onChange={(e) => setKeywords(e.target.value)}
-                  />
-                </div>
-              </div> */}
-
               {/* 1. Primary Skills */}
               <div className="space-y-2">
                 <label className="text-xs text-emerald-400 font-bold tracking-wider">PRIMARY SKILLS</label>
@@ -418,8 +406,6 @@ export default function SearchPage() {
                 <span>GitHub Dataset (Local)</span>
               </div>
             </div>
-
-            {/* AI Resume Analyzer Removed as per request */}
           </div>
 
           {/* Results Grid */}
@@ -501,4 +487,12 @@ export default function SearchPage() {
       </div>
     </div>
   );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-950 text-slate-50 flex items-center justify-center font-mono animate-pulse">LOADING SEARCH MODULE...</div>}>
+      <SearchContent />
+    </Suspense>
+  )
 }
