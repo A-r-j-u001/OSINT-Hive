@@ -4,6 +4,10 @@
 
 OSINT-Hive is a Next.js application that leverages Open Source Intelligence (OSINT) to aggregate professional profiles from LinkedIn, GitHub, and other public sources. It uses Google's Gemini AI to analyze these profiles, identify skill gaps, and generate personalized career learning paths.
 
+> **📘 Comprehensive Documentation**
+> For a deep dive into the project structure, architecture, file locations, and inner workings, please read the **[Full Project Report](./report.md)**.
+
+
 ![OSINT-Hive Logo](/public/OSINT_HIVE.svg)
 
 ## 🚀 Features
