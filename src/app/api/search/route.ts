@@ -71,7 +71,7 @@ export async function GET(request: Request) {
   // --- GITHUB DATASET MODE (CSV) ---
   if (mode === 'github') {
     try {
-      const filePath = path.join(process.cwd(), 'DATA-SETS', 'Cleaned Better Schema Github Indian Users Deep Data.csv')
+      const filePath = path.join(process.cwd(), 'src', 'data', 'github-users.csv')
       const fileContents = fs.readFileSync(filePath, 'utf8')
 
       // Simple CSV Parser handling quoted fields and newlines

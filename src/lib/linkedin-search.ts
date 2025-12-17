@@ -2,7 +2,7 @@ import fs from 'fs';
 import readline from 'readline';
 import path from 'path';
 
-const DATA_FILE_PATH = path.join(process.cwd(), 'DATA-SETS', '10k_data_li_india.txt');
+const DATA_FILE_PATH = path.join(process.cwd(), 'src', 'data', 'linkedin-data.txt');
 
 export interface LinkedInProfile {
     public_identifier: string;

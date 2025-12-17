@@ -21,7 +21,7 @@ export interface GithubUser {
 
 export function getGithubData(): GithubUser[] {
     try {
-        const filePath = path.join(process.cwd(), 'DATA-SETS', 'Cleaned Better Schema Github Indian Users Deep Data.csv');
+        const filePath = path.join(process.cwd(), 'src', 'data', 'github-users.csv');
         const fileContent = fs.readFileSync(filePath, 'utf-8');
 
         const rows: GithubUser[] = [];
